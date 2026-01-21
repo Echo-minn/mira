@@ -1,10 +1,14 @@
 // about me
-const aboutMe = `I’m a <b>CMU ECE master’s student</b> focused on building reliable, high-performance developer and ML systems.
+const aboutMe = `I’m a <b>CMU ECE master’s student</b> with a strong background in software engineering, systems
+development, and large-scale open-source projects.
 
-Previously at Shanghai AI Laboratory, I helped ship and scale products and open-source tooling in the OpenMMLab ecosystem—strengthening CI, infrastructure, and developer experience. Recently, my work has centered on performance-critical LLM systems (e.g., speculative decoding and KV-cache optimization), where I enjoy turning research ideas into robust, measurable wins.`;
+Previously, I worked as a Software Engineer at <b><a href="https://www.shlab.org.cn/" target="_blank" rel="noreferrer">Shanghai AI Laboratory</a></b>, where I made core contributions to multiple production-level and open-source systems within
+the <a href="https://platform.openmmlab.com/aboutus/" target="_blank" rel="noreferrer"><b>OpenMMLab</b></a> ecosystem like <a href="https://www.opencompass.us/" target="_blank" rel="noreferrer"><b>OpenCompass</b></a> and <a href="https://openxlab.org.cn/apps" target="_blank" rel="noreferrer"><b>OpenXLab</b></a>.
+
+At CMU, my academic and research work has deepened my interest in performance-critical systems and applied machine learning infrastructure. I have worked on projects involving LLM systems, speculative decoding, KV-cache optimization, and distributed training, which strengthened my ability to reason about trade-offs across correctness, efficiency, and scalability.`
 
 // headshot
-const headshot = "./assets/headshot.jpg"; // falls back to placeholder via onerror
+const headshot = "./assets/IMG_1818.jpg"; // falls back to placeholder via onerror
 
 // personal links
 const links = [
@@ -23,10 +27,15 @@ const links = [
     icon: "./assets/email.svg",
     url: "mailto:minxia@andrew.cmu.edu",
   },
+  // {
+  //   name: "CV",
+  //   icon: "./assets/cv.svg",
+  //   url: "./assets/cv.pdf",
+  // },
   {
-    name: "CV",
-    icon: "./assets/cv.svg",
-    url: "./assets/cv.pdf",
+    name: "(412) 214-2063",
+    icon: "./assets/phone.svg",
+    url: "tel:+14122142063",
   }
 ];
 
@@ -72,11 +81,11 @@ const education = [
     degree: "Master of Science in Electrical and Computer Engineering",
     location: "Pittsburgh, PA",
     dates: "January 2025 - December 2026",
-    gpa: 3.95,
+    gpa: '3.95/4.0',
     courses: [
-      "Special Topics: Advanced Topics in Machine Learning Systems (LLM Edition)",
+      "Advanced Topics in ML Systems (LLM Edition)",
       "Parallel Computer Architecture and Programming",
-      "Large Language Model Applications",
+      "LLM Applications",
       "Full-Stack Software Development for Engineers",
       "Cloud Infrastructure",
     ],
@@ -86,7 +95,7 @@ const education = [
     degree: "Bachelor of Engineering in Software Engineering",
     location: "Wuhan, China",
     dates: "September 2017 - June 2021",
-    gpa: 3.85,
+    gpa: '3.85/4.0',
     courses: [
       "Software Engineering",
       "Database Systems",
@@ -373,9 +382,33 @@ function card({ title, subtitle, bullets, chips, href, metaRight, actions }) {
     body.appendChild(ul);
   }
 
-  const c = el("article", { class: "panel card" }, [header, body]);
+  const c = el("article", { class: "panel card reveal" }, [header, body]);
   if (Array.isArray(chips) && chips.length) c.appendChild(chipRow(chips));
   return c;
+}
+
+function setupScrollReveal() {
+  const items = Array.from(document.querySelectorAll(".reveal"));
+  if (!items.length) return;
+
+  // Fallback: if IntersectionObserver isn't available, just show everything.
+  if (typeof IntersectionObserver === "undefined") {
+    items.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        io.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+  );
+
+  items.forEach((el) => io.observe(el));
 }
 
 function renderBanner() {
@@ -490,7 +523,7 @@ function renderEducation() {
   const grid = el("div", { class: "grid" });
   education.forEach((e) => {
     const bullets = [];
-    if (typeof e.gpa === "number") bullets.push(`GPA: ${e.gpa}`);
+    bullets.push(`GPA: ${e.gpa}`);
     if (Array.isArray(e.courses) && e.courses.length) bullets.push(`Courses: ${e.courses.join(", ")}`);
 
     grid.appendChild(
@@ -538,11 +571,14 @@ function renderContactAndFooter() {
 
 function renderAll() {
   renderBanner();
+  renderEducation();
   renderExperiences();
   renderProjects();
-  renderEducation();
   renderSkills();
   renderContactAndFooter();
 }
 
-document.addEventListener("DOMContentLoaded", renderAll);
+document.addEventListener("DOMContentLoaded", () => {
+  renderAll();
+  setupScrollReveal();
+});
