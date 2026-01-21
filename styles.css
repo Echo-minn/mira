@@ -43,10 +43,6 @@ html {
 body {
   margin: 0;
   color: var(--text);
-  background:
-    radial-gradient(1200px 800px at 20% 5%, rgba(138, 180, 255, 0.25), transparent 55%),
-    radial-gradient(900px 700px at 85% 15%, rgba(255, 149, 0, 0.12), transparent 52%),
-    var(--bg);
   font-family:
     ui-sans-serif,
     system-ui,
@@ -69,8 +65,14 @@ img {
 }
 
 a {
-  color: inherit;
+  color: #6597e0;
   text-decoration: none;
+}
+
+a.nav-brand,
+a.nav-link,
+a.btn {
+  color: inherit;
 }
 
 a:hover {
@@ -266,12 +268,30 @@ a:hover {
   text-decoration: none;
 }
 
-.btn .dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 999px;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(138, 180, 255, 0.2);
+.btn .icon {
+  width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.btn .btn-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.icon-credits {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.icon-credits a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .headshot-wrap {
@@ -334,6 +354,45 @@ a:hover {
   justify-content: space-between;
   gap: 12px;
   min-width: 0;
+}
+
+.card-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.card-actions {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.card-action {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #6597e0; /* match global link color */
+  text-decoration: none;
+}
+
+.card-action:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.action-icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+@media (max-width: 520px) {
+  .card-right {
+    align-items: flex-start;
+  }
 }
 
 .card-title {

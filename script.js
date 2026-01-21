@@ -1,5 +1,5 @@
 // about me
-const aboutMe = `I’m a CMU ECE master’s student focused on building reliable, high-performance developer and ML systems.
+const aboutMe = `I’m a <b>CMU ECE master’s student</b> focused on building reliable, high-performance developer and ML systems.
 
 Previously at Shanghai AI Laboratory, I helped ship and scale products and open-source tooling in the OpenMMLab ecosystem—strengthening CI, infrastructure, and developer experience. Recently, my work has centered on performance-critical LLM systems (e.g., speculative decoding and KV-cache optimization), where I enjoy turning research ideas into robust, measurable wins.`;
 
@@ -10,22 +10,22 @@ const headshot = "./assets/headshot.jpg"; // falls back to placeholder via onerr
 const links = [
   {
     name: "GitHub",
-    icon: "github",
-    url: "https://github.com/MiraXia",
+    icon: "./assets/github.svg",
+    url: "https://github.com/Echo-minn",
   },
   {
     name: "LinkedIn",
-    icon: "linkedin",
-    url: "https://linkedin.com/in/mira-xia",
+    icon: "./assets/linkedin.svg",
+    url: "https://www.linkedin.com/in/mira-min-xiao-4884971a7/",
   },
   {
     name: "Email",
-    icon: "email",
+    icon: "./assets/email.svg",
     url: "mailto:minxia@andrew.cmu.edu",
   },
   {
     name: "CV",
-    icon: "cv",
+    icon: "./assets/cv.svg",
     url: "./assets/cv.pdf",
   }
 ];
@@ -129,7 +129,8 @@ const projects = [
       "FlashAttention",
       "GPU Optimization",
     ],
-    link: "",
+    paper: "",
+    code: "https://github.com/Echo-minn/omni-attention",
     highlights: [
       "Extended FlashAttention-2 Q-tiling to support interleaved and block-sparse attention layouts",
       "Implemented MMA-based pipelines with shared-memory reuse, double buffering, and layout swizzling",
@@ -148,7 +149,8 @@ const projects = [
       "Quantization",
       "PyTorch",
     ],
-    link: "",
+    paper: "",
+    code: "https://github.com/Echo-minn/MSpecKV",
     highlights: [
       "Combined TriForce speculative decoding with KV-cache quantization and resident KV reuse",
       "Achieved up to 14.45× end-to-end latency speedup at 32K context length",
@@ -166,7 +168,8 @@ const projects = [
       "Mixture of Experts",
       "LLM Training",
     ],
-    link: "",
+    paper: "",
+    code: "https://github.com/Echo-minn/LlaMA-MoE-Instruction",
     highlights: [
       "Converted Llama-3.2-3B-Instruct into an MoE model by upcycling dense FFNs into experts",
       "Designed a three-stage training pipeline with router warm-up and load-balancing loss",
@@ -185,7 +188,7 @@ const projects = [
       "Configuration Parsing",
       "CI/CD",
     ],
-    link: "https://github.com/open-compass", // replace with exact repo if needed
+    website: "https://open-compass.com",
     highlights: [
       "Designed and built SeaLion-CLI with authentication, routing, state management, error handling, and deployment support",
       "Implemented request interception, localization, and multi-environment build pipelines",
@@ -198,7 +201,7 @@ const projects = [
       "A real-time 3D visualization system for streaming and editing Gaussian-based video content in the browser.",
     time: "February 2024 - June 2024",
     technologies: ["Three.js", "WebRTC", "JavaScript", "WebGL"],
-    link: "",
+    website: "",
     highlights: [
       "Rendered 3D Gaussian model video streams using Three.js with dynamic view and coordinate transformations",
       "Implemented real-time video streaming between frontend and backend using WebRTC",
@@ -217,7 +220,8 @@ const projects = [
       "SSE",
       "LLM APIs",
     ],
-    link: "https://github.com/OpenAOE", // replace with exact repo if needed
+    website: "https://github.com/OpenAOE",
+    code: "https://github.com/OpenAOE",
     highlights: [
       "Designed and implemented complex global state synchronization using Zustand",
       "Built a custom rich-text editor using native Selection and Range APIs for intelligent prompt assistance",
@@ -235,7 +239,7 @@ const projects = [
       "Frontend Architecture",
       "Dev Tooling",
     ],
-    link: "",
+    website: "",
     highlights: [
       "Maintained multi-version and multi-environment setups for iterative development and deployment",
       "Integrated and refactored X-Term to support enhanced shortcuts and editing experience",
@@ -271,6 +275,7 @@ function el(tag, attrs = {}, children = []) {
   for (const [k, v] of Object.entries(attrs || {})) {
     if (k === "class") node.className = v;
     else if (k === "text") node.textContent = v;
+    else if (k === "html") node.innerHTML = String(v);
     else if (k.startsWith("on") && typeof v === "function")
       node.addEventListener(k.slice(2), v);
     else node.setAttribute(k, String(v));
@@ -315,14 +320,45 @@ function chipRow(items = []) {
   return row;
 }
 
-function card({ title, subtitle, bullets, chips, href, metaRight }) {
+function actionRow(actions = []) {
+  const row = el("div", { class: "card-actions" });
+  actions
+    .filter((a) => a && a.href)
+    .forEach((a) => {
+      const icon = a.icon
+        ? el("img", { class: "action-icon", src: a.icon, alt: "", loading: "lazy" })
+        : null;
+      row.appendChild(
+        el(
+          "a",
+          {
+            class: "card-action",
+            href: a.href,
+            target: "_blank",
+            rel: "noreferrer",
+            "aria-label": a.label,
+            title: a.label,
+          },
+          [icon].filter(Boolean),
+        ),
+      );
+    });
+  return row;
+}
+
+function card({ title, subtitle, bullets, chips, href, metaRight, actions }) {
   const titleNode = href
     ? el("a", { href, target: "_blank", rel: "noreferrer", text: title })
     : el("span", { text: title });
 
+  const right = el("div", { class: "card-right" }, [
+    Array.isArray(actions) && actions.length ? actionRow(actions) : null,
+    metaRight ? el("div", { class: "card-meta", text: metaRight }) : null,
+  ]);
+
   const titleRow = el("div", { class: "card-title-row" }, [
     el("h3", { class: "card-title" }, [titleNode]),
-    metaRight ? el("div", { class: "card-meta", text: metaRight }) : null,
+    right,
   ]);
 
   const header = el("div", { class: "card-header" }, [
@@ -354,15 +390,21 @@ function renderBanner() {
   const left = el("div", {}, [
     el("h1", { text: person.name }),
     el("p", { class: "tagline", text: person.tagline }),
-    ...aboutParagraphs.map((p) => el("p", { class: "about", text: p })),
+    ...aboutParagraphs.map((p) => el("p", { class: "about", html: p })),
   ]);
 
   const linkRow = el("div", { class: "meta-row" });
   links.forEach((l) => {
+    const iconImg = el("img", {
+      class: "btn-icon",
+      src: l.icon,
+      alt: "",
+      loading: "lazy",
+    });
     linkRow.appendChild(
       el("a", { class: "btn", href: l.url, target: "_blank", rel: "noreferrer" }, [
-        el("span", { class: "dot", "aria-hidden": "true" }),
-        el("span", { text: l.name }),
+        el("span", { class: "icon", "aria-hidden": "true" }, [iconImg]),
+        el("span", { class: "label", text: l.name }),
       ]),
     );
   });
@@ -395,6 +437,7 @@ function renderExperiences() {
         title: `${exp.company}`,
         subtitle: `${exp.title} · ${exp.location} · ${abbreviateMonths(exp.dates)}`,
         bullets: exp.responsibilities,
+        href: exp.company_url || null,
       }),
     );
   });
@@ -409,6 +452,21 @@ function renderProjects() {
   const grid = el("div", { class: "grid" });
   projects.forEach((p) => {
     const bullets = Array.isArray(p.highlights) && p.highlights.length ? p.highlights : null;
+    const actions = [];
+    const seen = new Set();
+    const addAction = (label, href, icon) => {
+      if (!href) return;
+      const key = String(href);
+      if (seen.has(key)) return;
+      seen.add(key);
+      actions.push({ label, href, icon });
+    };
+
+    addAction("Website", p.website, "./assets/website.svg");
+    addAction("Paper", p.paper, "./assets/paper.svg");
+    addAction("Code", p.code, "./assets/github.svg");
+
+    const primaryHref = p.website || p.code || p.paper || null;
     grid.appendChild(
       card({
         title: p.name,
@@ -416,7 +474,8 @@ function renderProjects() {
         subtitle: p.summary,
         bullets,
         chips: p.technologies,
-        href: p.link,
+        href: primaryHref,
+        actions,
       }),
     );
   });
