@@ -138,7 +138,7 @@ const projects = [
       "FlashAttention",
       "GPU Optimization",
     ],
-    paper: "",
+    paper: "https://github.com/Echo-minn/omni-attention/blob/main/omni_attention_report.pdf",
     code: "https://github.com/Echo-minn/omni-attention",
     highlights: [
       "Extended FlashAttention-2 Q-tiling to support interleaved and block-sparse attention layouts",
@@ -158,7 +158,7 @@ const projects = [
       "Quantization",
       "PyTorch",
     ],
-    paper: "",
+    paper: "https://github.com/Echo-minn/MSpecKV/blob/main/MSpecKV.pdf",
     code: "https://github.com/Echo-minn/MSpecKV",
     highlights: [
       "Combined TriForce speculative decoding with KV-cache quantization and resident KV reuse",
@@ -177,7 +177,7 @@ const projects = [
       "Mixture of Experts",
       "LLM Training",
     ],
-    paper: "",
+    paper: "https://github.com/Echo-minn/LlaMA-MoE-Instruction/blob/main/tech-report.pdf",
     code: "https://github.com/Echo-minn/LlaMA-MoE-Instruction",
     highlights: [
       "Converted Llama-3.2-3B-Instruct into an MoE model by upcycling dense FFNs into experts",
