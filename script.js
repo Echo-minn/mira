@@ -36,7 +36,8 @@ const links = [
     name: "Phone",
     icon: "./assets/phone.svg",
     url: "tel:+14122142063",
-  }
+    copyText: "+1 (412) 214-2063",
+  },
 ];
 
 // experiences
@@ -48,8 +49,8 @@ const experiences = [
     location: "Shanghai, China",
     dates: "July 2021 - December 2024",
     responsibilities: [
-      "Lead the design and development of key products like OpenCompass and OpenXLab within OpenMMLab, emphasizing continuous integration, iterative enhancements, and integrity for the products. ",
-      "Developed and released open-source tools like Sea-Lion-UI(An UI component and toolkit library); OpenAOE(A parallel chat platform); Huixiangdou(A group chat assistant based on LLM)",
+      "Lead the design and development of key products like <b>OpenCompass</b> and <b>OpenXLab</b> within <b>OpenMMLab</b>, emphasizing continuous integration, iterative enhancements, and integrity for the products. ",
+      "Developed and released open-source tools like <b>Sea-Lion-UI</b>(An UI component and toolkit library); <b>OpenAOE</b>(A parallel chat platform); <b>Huixiangdou</b>(A group chat assistant based on LLM)",
     ],
   },
   {
@@ -127,6 +128,30 @@ const skills = {
 // projects
 const projects = [
   {
+    name: "Yet Another Chat App (YACA)",
+    summary:
+      "A full‑stack TypeScript web app with JWT authentication, real‑time chat, friend invitations, private messaging, and user profiles.",
+    time: "Aug 2025 - Dec 2025",
+    technologies: [
+      // Software Technologies
+      "Node.js",
+      "Express.js",
+      "MongoDB Atlas",
+      "JWT",
+      "Socket.IO",
+      "Axios",
+      "Bcrypt",
+      "REST API",
+      "Jest",
+    ],
+    website: "https://f25-cus2-f25.onrender.com",
+    highlights: [
+      "Designed an interface‑driven backend architecture in <b>TypeScript</b>/<b>Node.js</b> with a clean DB abstraction (IDatabase/DAC) enabling environment-based swaps (in‑memory for tests/dev vs <b>MongoDB</b> for prod) without changing business logic.",
+      "Implemented a typed real‑time layer with <b>Socket.IO</b> event contracts and centralized <b>JWT-based websocket handshake validation</b>, enforcing auth consistently across both REST and websocket entry points.",
+      "Built a repeatable test harness and automation setup using <b>Jest</b> + <b>Axios</b> with isolated server startup/teardown (via http-terminator) and coverage for auth/token flows and message APIs, improving reliability and preventing leaked handles.",
+    ],
+  },
+  {
     name: "OmniAttention",
     summary:
       "A high-performance CUDA sparse attention kernel supporting interleaved and arbitrary block-sparse masks.",
@@ -141,9 +166,9 @@ const projects = [
     paper: "https://github.com/Echo-minn/omni-attention/blob/main/omni_attention_report.pdf",
     code: "https://github.com/Echo-minn/omni-attention",
     highlights: [
-      "Extended FlashAttention-2 Q-tiling to support interleaved and block-sparse attention layouts",
-      "Implemented MMA-based pipelines with shared-memory reuse, double buffering, and layout swizzling",
-      "Achieved FlexAttention-comparable performance and up to 2.97× speedup in optimal configurations",
+      "Extended <b>FlashAttention-2 Q-tiling</b> to support interleaved and block-sparse attention layouts",
+      "Implemented <b>MMA-based pipelines</b> with shared-memory reuse, double buffering, and layout swizzling",
+      "Achieved FlexAttention-comparable performance and up to <b>2.97× speedup</b> in optimal configurations",
     ],
   },
   {
@@ -161,8 +186,8 @@ const projects = [
     paper: "https://github.com/Echo-minn/MSpecKV/blob/main/MSpecKV.pdf",
     code: "https://github.com/Echo-minn/MSpecKV",
     highlights: [
-      "Combined TriForce speculative decoding with KV-cache quantization and resident KV reuse",
-      "Achieved up to 14.45× end-to-end latency speedup at 32K context length",
+      "Combined TriForce speculative decoding with <b>KV-cache quantization</b> and <b>resident KV reuse</b>",
+      "Achieved up to <b>14.45× end-to-end latency speedup</b> at 32K context length",
       "Built a reproducible benchmarking and ablation framework with multi-seed statistical reporting",
     ],
   },
@@ -212,8 +237,8 @@ const projects = [
     technologies: ["Three.js", "WebRTC", "JavaScript", "WebGL"],
     website: "",
     highlights: [
-      "Rendered 3D Gaussian model video streams using Three.js with dynamic view and coordinate transformations",
-      "Implemented real-time video streaming between frontend and backend using WebRTC",
+      "Rendered 3D Gaussian model video streams using <b>Three.js</b> with dynamic view and coordinate transformations",
+      "Implemented real-time video streaming between frontend and backend using <b>WebRTC</b>",
       "Developed custom smooth parallax animations to enhance visual interaction",
     ],
   },
@@ -234,7 +259,7 @@ const projects = [
     highlights: [
       "Designed and implemented complex global state synchronization using Zustand",
       "Built a custom rich-text editor using native Selection and Range APIs for intelligent prompt assistance",
-      "Enabled text/image input and streaming output via SSE and LLM APIs with parallel chat windows",
+      "Enabled text/image input and streaming output via <b>SSE</b> and <b>LLM APIs</b> with parallel chat windows",
     ],
   },
   {
@@ -296,6 +321,48 @@ function el(tag, attrs = {}, children = []) {
   return node;
 }
 
+async function copyToClipboard(text) {
+  const value = String(text ?? "");
+  if (!value) return;
+
+  // Prefer async clipboard API when available.
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    await navigator.clipboard.writeText(value);
+    return;
+  }
+
+  // Fallback (works in more contexts): temporary textarea + execCommand.
+  const ta = el("textarea", {
+    class: "sr-only",
+    readonly: "true",
+  });
+  ta.value = value;
+  document.body.appendChild(ta);
+  ta.select();
+  const ok = document.execCommand && document.execCommand("copy");
+  ta.remove();
+  if (!ok) throw new Error("Copy failed");
+}
+
+function showToast(message, { durationMs = 1800 } = {}) {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+
+  const toast = el("div", { class: "toast", text: String(message) });
+  toast.setAttribute("role", "status");
+  toast.setAttribute("aria-live", "polite");
+  document.body.appendChild(toast);
+
+  // Force reflow so the transition applies.
+  void toast.offsetHeight;
+  toast.classList.add("is-visible");
+
+  window.setTimeout(() => {
+    toast.classList.remove("is-visible");
+    window.setTimeout(() => toast.remove(), 220);
+  }, durationMs);
+}
+
 function sectionTitle(text) {
   return el("h2", { class: "section-title", text });
 }
@@ -355,7 +422,7 @@ function actionRow(actions = []) {
   return row;
 }
 
-function card({ title, subtitle, bullets, chips, href, metaRight, actions }) {
+function card({ title, subtitle, subtitleHtml, bullets, bulletsHtml, chips, href, metaRight, actions }) {
   const titleNode = href
     ? el("a", { href, target: "_blank", rel: "noreferrer", text: title })
     : el("span", { text: title });
@@ -372,13 +439,24 @@ function card({ title, subtitle, bullets, chips, href, metaRight, actions }) {
 
   const header = el("div", { class: "card-header" }, [
     titleRow,
-    subtitle ? el("p", { class: "sub", text: subtitle }) : null,
+    subtitleHtml
+      ? el("p", { class: "sub", html: subtitleHtml })
+      : subtitle
+        ? el("p", { class: "sub", text: subtitle })
+        : null,
   ]);
 
   const body = el("div", {}, []);
-  if (Array.isArray(bullets) && bullets.length) {
+  const bulletItems = Array.isArray(bulletsHtml) && bulletsHtml.length ? bulletsHtml : bullets;
+  if (Array.isArray(bulletItems) && bulletItems.length) {
     const ul = el("ul");
-    bullets.filter(Boolean).forEach((b) => ul.appendChild(el("li", { text: b })));
+    bulletItems
+      .filter(Boolean)
+      .forEach((b) =>
+        ul.appendChild(
+          el("li", bulletsHtml ? { html: String(b) } : { text: String(b) }),
+        ),
+      );
     body.appendChild(ul);
   }
 
@@ -434,8 +512,32 @@ function renderBanner() {
       alt: "",
       loading: "lazy",
     });
+
+    const isCopyLink = Boolean(l.copyText);
+    const attrs = isCopyLink
+      ? {
+          class: "btn",
+          // Use a neutral href so OS-level tel/mail handlers don't steal focus before we show feedback.
+          href: "#",
+          role: "button",
+          onclick: async (e) => {
+            e.preventDefault();
+            try {
+              await copyToClipboard(l.copyText);
+              showToast("Phone number copied");
+            } catch {
+              try {
+                showToast("Unable to copy");
+              } catch {
+                window.alert("Phone number copied");
+              }
+            }
+          },
+        }
+      : { class: "btn", href: l.url, target: "_blank", rel: "noreferrer" };
+
     linkRow.appendChild(
-      el("a", { class: "btn", href: l.url, target: "_blank", rel: "noreferrer" }, [
+      el("a", attrs, [
         el("span", { class: "icon", "aria-hidden": "true" }, [iconImg]),
         el("span", { class: "label", text: l.name }),
       ]),
@@ -469,7 +571,7 @@ function renderExperiences() {
       card({
         title: `${exp.company}`,
         subtitle: `${exp.title} · ${exp.location} · ${abbreviateMonths(exp.dates)}`,
-        bullets: exp.responsibilities,
+        bulletsHtml: exp.responsibilities,
         href: exp.company_url || null,
       }),
     );
@@ -504,8 +606,8 @@ function renderProjects() {
       card({
         title: p.name,
         metaRight: abbreviateMonths(p.time),
-        subtitle: p.summary,
-        bullets,
+        subtitleHtml: p.summary,
+        bulletsHtml: bullets,
         chips: p.technologies,
         href: primaryHref,
         actions,
@@ -523,14 +625,14 @@ function renderEducation() {
   const grid = el("div", { class: "grid" });
   education.forEach((e) => {
     const bullets = [];
-    bullets.push(`GPA: ${e.gpa}`);
-    if (Array.isArray(e.courses) && e.courses.length) bullets.push(`Courses: ${e.courses.join(", ")}`);
+    bullets.push(`<b>GPA:</b> ${e.gpa}`);
+    if (Array.isArray(e.courses) && e.courses.length) bullets.push(`<b>Courses:</b> ${e.courses.join(", ")}`);
 
     grid.appendChild(
       card({
         title: e.school,
         subtitle: `${e.degree} · ${e.location} · ${abbreviateMonths(e.dates)}`,
-        bullets,
+        bulletsHtml: bullets,
       }),
     );
   });
