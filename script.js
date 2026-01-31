@@ -20,7 +20,7 @@ const links = [
   {
     name: "LinkedIn",
     icon: "./assets/linkedin.svg",
-    url: "https://www.linkedin.com/in/mira-min-xiao-4884971a7/",
+    url: "https://www.linkedin.com/in/min-mira-xiao-4884971a7/",
   },
   {
     name: "Email",
@@ -287,8 +287,8 @@ const contact = {
   email: "minxia@andrew.cmu.edu",
   phone: "+1 (412) 268-7321",
   address: "Pittsburgh, PA",
-  linkedin: "https://linkedin.com/in/mira-xia",
-  github: "https://github.com/MiraXia",
+  linkedin: "https://www.linkedin.com/in/min-mira-xiao-4884971a7/",
+  github: "https://github.com/Echo-minn",
 };
 
 // ---------------------------
