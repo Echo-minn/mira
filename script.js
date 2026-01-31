@@ -2,10 +2,10 @@
 const aboutMe = `I’m a <b>CMU ECE master’s student</b> with a strong background in software engineering, systems
 development, and large-scale open-source projects.
 
-Previously, I worked as a Software Engineer at <b><a href="https://www.shlab.org.cn/" target="_blank" rel="noreferrer">Shanghai AI Laboratory</a></b>, where I made core contributions to multiple production-level and open-source systems within
-the <a href="https://platform.openmmlab.com/aboutus/" target="_blank" rel="noreferrer"><b>OpenMMLab</b></a> ecosystem like <a href="https://www.opencompass.us/" target="_blank" rel="noreferrer"><b>OpenCompass</b></a> and <a href="https://openxlab.org.cn/apps" target="_blank" rel="noreferrer"><b>OpenXLab</b></a>.
+Previously, I worked as a Software Engineer at <b><a href="https://www.shlab.org.cn/" target="_blank" rel="noreferrer">Shanghai AI Laboratory</a></b>, where I made core contributions to AI-powered platforms and open-source projects within
+the <a href="https://platform.openmmlab.com/aboutus/" target="_blank" rel="noreferrer"><b>OpenMMLab</b></a> ecosystem and delivered <a href="https://www.opencompass.us/" target="_blank" rel="noreferrer"><b>OpenCompass</b></a>, <a href="https://openxlab.org.cn/apps" target="_blank" rel="noreferrer"><b>OpenXLab</b></a> and <a href="https://github.com/InternLM/HuixiangDou" target="_blank" rel="noreferrer"><b>HuiXiangDou</b></a>.
 
-At CMU, my academic and research work has deepened my interest in performance-critical systems and applied machine learning infrastructure. I have worked on projects involving LLM systems, speculative decoding, KV-cache optimization, and distributed training, which strengthened my ability to reason about trade-offs across correctness, efficiency, and scalability.`
+At CMU, my academic and research work focuses on designing and implementing high-performance and efficient methods for LLM systems.`
 
 // headshot
 const headshot = "./assets/IMG_1818.jpg"; // falls back to placeholder via onerror
@@ -87,7 +87,7 @@ const education = [
       "Advanced Topics in ML Systems (LLM Edition)",
       "Parallel Computer Architecture and Programming",
       "LLM Applications",
-      "Full-Stack Software Development for Engineers",
+      "Full-Stack Software Development",
       "Cloud Infrastructure",
     ],
   },
@@ -254,8 +254,8 @@ const projects = [
       "SSE",
       "LLM APIs",
     ],
-    website: "https://github.com/OpenAOE",
-    code: "https://github.com/OpenAOE",
+    website: "https://github.com/InternLM/OpenAOE",
+    code: "https://github.com/InternLM/OpenAOE",
     highlights: [
       "Designed and implemented complex global state synchronization using Zustand",
       "Built a custom rich-text editor using native Selection and Range APIs for intelligent prompt assistance",
@@ -517,20 +517,14 @@ function renderBanner() {
     const attrs = isCopyLink
       ? {
           class: "btn",
-          // Use a neutral href so OS-level tel/mail handlers don't steal focus before we show feedback.
-          href: "#",
-          role: "button",
+          href: l.url || "#",
           onclick: async (e) => {
             e.preventDefault();
             try {
               await copyToClipboard(l.copyText);
               showToast("Phone number copied");
             } catch {
-              try {
-                showToast("Unable to copy");
-              } catch {
-                window.alert("Phone number copied");
-              }
+              showToast("Unable to copy");
             }
           },
         }
